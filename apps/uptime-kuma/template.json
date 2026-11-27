@@ -1,0 +1,20 @@
+{
+  "id": "uptime-kuma",
+  "name": "Uptime Kuma",
+  "description": "The official Uptime Kuma image with its SQLite data on a lasting volume and an HTTPS address. Signs in with the admin user and the password shown to the team's owners and admins in the console. It has no separate database, so CloudPloy database backups do not cover it.",
+  "image": "{{registry}}/uptime-kuma:2.5.12-slim@sha256:f2a9bc853deb2a6f37df229649f96d62efc3cb24e38b08eee79234f76613d063",
+  "port": 3001,
+  "volume": "/app/data",
+  "memory_mb": 256,
+  "env": {
+    "UPTIME_KUMA_DB_TYPE": "sqlite"
+  },
+  "setup": {
+    "command": "node -e 'let p=\"\";process.stdin.on(\"data\",d=>p+=d).on(\"end\",()=>{setTimeout(()=>process.exit(3),240000);const s=require(\"socket.io-client\").io(\"http://127.0.0.1:3001\",{reconnectionDelay:2000});s.on(\"connect\",()=>s.emit(\"setup\",\"admin\",p.trim(),r=>process.exit(r.ok||String(r.msg).includes(\"has been initialized\")?0:4)))})' && touch /app/data/.cloudploy-ready",
+    "ready": "/app/data/.cloudploy-ready"
+  },
+  "admin": {
+    "user": "admin",
+    "path": "/dashboard"
+  }
+}
