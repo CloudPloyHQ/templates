@@ -1,0 +1,29 @@
+{
+  "name": "php",
+  "description": "PHP 8.4 with nginx and Composer, and Node.js for frontend builds. Built from the repo's source with Dockerfile below.",
+  "frameworks": {
+    "laravel": {
+      "detect": "file artisan and composer.json require laravel/framework",
+      "doc_root": "/app/public"
+    },
+    "symfony": {
+      "detect": "file bin/console and composer.json require symfony/framework-bundle or symfony/symfony",
+      "doc_root": "/app/public",
+      "extra_writable_dirs": "var/cache var/log"
+    },
+    "php": {
+      "detect": "composer.json or index.php, when no other framework matched",
+      "doc_root": "/app/public"
+    }
+  },
+  "port": 80,
+  "start_command": "supervisord -c /opt/docker/etc/supervisor.conf",
+  "placeholders": {
+    "PHP_IMAGE": "ghcr.io/cloudployhq/php-nginx:8.4-alpine, pinned by digest",
+    "COMPOSER_IMAGE": "ghcr.io/cloudployhq/composer:2.11.2, pinned by digest",
+    "NODE_APK_PACKAGES": "exact Alpine nodejs and npm versions",
+    "DOC_ROOT": "the framework's doc_root",
+    "DOC_ROOT_NOTE": "a comment naming the public directory",
+    "EXTRA_WRITABLE_DIRS": "a RUN line making extra_writable_dirs writable, or nothing"
+  }
+}

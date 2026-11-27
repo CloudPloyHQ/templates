@@ -1,0 +1,24 @@
+# Every image CloudPloy runs on customer servers, mirrored to ghcr.io/cloudployhq/<name>:<tag>.
+# One line each: <name>:<tag> <source>@sha256:<multi-arch index digest>
+# The copy keeps the digest, so brain pins ghcr.io/cloudployhq/<name>:<tag>@<same digest>.
+# Bump a tag by changing the source digest here and in brain together.
+
+# Traefik, the reverse proxy on every server
+traefik:v3.7.19 public.ecr.aws/docker/library/traefik:v3.7.19@sha256:aa942a00bce033c909bf1f7e861d93761be4b31a035f10d2410d33e38a8f41cf
+
+# php/Dockerfile: the PHP base and the Composer binary
+php-nginx:8.4-alpine docker.io/webdevops/php-nginx:8.4-alpine@sha256:d8b44b89be2234cab8e5f3c35b34b65c2a6b3b88cd2d7e05a53cf5129011967c
+composer:2.11.2 public.ecr.aws/docker/library/composer:2.11.2@sha256:5bcb28b8d0edc4091125f8218f9d088f998bdfc843f8fbb9a4beb4dcd8625684
+
+# Databases
+postgres:17 public.ecr.aws/docker/library/postgres:17@sha256:156d40cfa063d6babb15d329a8e15b26a8d0690ebb6084c956084f3b025c3b30
+postgres:16 public.ecr.aws/docker/library/postgres:16@sha256:820b1558a744efeda508506fd85bff573cec8b6941ff4790ef4884a526dd6e86
+mysql:8.4 public.ecr.aws/docker/library/mysql:8.4@sha256:8c233bad33d520a7aae1c1e619c3a9775f4a1ba2d463d692fada04ec7f40be00
+valkey:8 public.ecr.aws/valkey/valkey:8@sha256:5032c4dd7abe08d6fd9382054608183e2bf1f7e3895ef619b8784698454325f7
+
+# One-click app templates
+wordpress:7.1.5-php8.4-apache public.ecr.aws/docker/library/wordpress:7.1.5-php8.4-apache@sha256:98a3fba3639b89fe1ade0cf6d37e61bc8934de872cf26d9dc5286962b554e3d1
+wordpress:cli-2.12.0-php8.4 public.ecr.aws/docker/library/wordpress:cli-2.12.0-php8.4@sha256:df224f633697444bbd1d2ca54b357b4f86834f82a74881b3e1acfbcc761025bb
+ghost:6.79.0 public.ecr.aws/docker/library/ghost:6.79.0@sha256:abfa44b1827e514bce3ef1f5e1471bb7c7fd885d9e6316cd648a8b8b883808f0
+n8n:2.49.6 docker.io/n8nio/n8n:2.49.6@sha256:a1a9955a4a9e5dd9fa65a62f59e0751351b45b9e5cd2c17e6e330a8d0026cad8
+uptime-kuma:2.5.12-slim docker.io/louislam/uptime-kuma:2.5.12-slim@sha256:f2a9bc853deb2a6f37df229649f96d62efc3cb24e38b08eee79234f76613d063

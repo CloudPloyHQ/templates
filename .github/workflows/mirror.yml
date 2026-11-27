@@ -1,0 +1,26 @@
+name: Mirror images
+on:
+  push:
+    branches: [main]
+    paths: [images.txt, scripts/mirror.sh, .github/workflows/mirror.yml]
+  schedule:
+    - cron: "17 4 * * *" # daily: re-copies any image whose package was deleted or never finished
+  workflow_dispatch:
+concurrency:
+  group: mirror
+permissions:
+  contents: read
+  packages: write # GITHUB_TOKEN only; no other secret
+jobs:
+  mirror:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Log in to GHCR
+        run: echo "$GITHUB_TOKEN" | skopeo login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: scripts/mirror.sh images.txt
+        env:
+          REGISTRY: ghcr.io/cloudployhq
