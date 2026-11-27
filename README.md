@@ -31,7 +31,8 @@ apps/<id>/README.md          what the app gets and how its owner signs in (optio
 ```
 
 Node.js, Python, Ruby and other stacks build with Nixpacks today, so they have no recipe here
-yet. A stack gets a folder when CloudPloy starts generating its Dockerfile.
+yet. A stack gets a folder when CloudPloy starts generating its Dockerfile. Nixpacks still
+builds from this registry: its build image is `nixpacks:ubuntu-1745885067` in `images.txt`.
 
 ## How CloudPloy uses it
 
