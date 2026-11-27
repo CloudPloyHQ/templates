@@ -14,13 +14,16 @@ while read -r target source; do
   digest=${source##*@}
   [[ $digest == sha256:* ]] || { echo "::error::$target: source is not pinned by digest"; exit 1; }
   dest="$REGISTRY/$target"
+  # skopeo takes a tag or a digest, not both; the tag in images.txt is for people.
+  ref=${source%@*}
+  from="${ref%:*}@$digest"
   # A copy that is already there is skipped, so the schedule costs one manifest read per image.
   if [ "$(skopeo inspect --raw --no-creds "docker://$dest" 2>/dev/null | sha256sum | cut -d' ' -f1)" = "${digest#sha256:}" ]; then
     echo "up to date: $dest@$digest"
     continue
   fi
-  echo "copying $source -> $dest"
-  if ! skopeo copy --all --preserve-digests --retry-times 3 "docker://$source" "docker://$dest"; then
+  echo "copying $from -> $dest"
+  if ! skopeo copy --all --preserve-digests --retry-times 3 "docker://$from" "docker://$dest"; then
     echo "::error::$target: copy failed"
     failed=1
     continue
