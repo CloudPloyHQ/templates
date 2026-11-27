@@ -28,9 +28,10 @@ while read -r target source; do
     failed=1
     continue
   fi
-  got=$(skopeo inspect --raw --no-creds "docker://$dest" | sha256sum | cut -d' ' -f1)
+  # Anonymous on purpose: a private package fails here, so the run is red until it is public.
+  got=$(skopeo inspect --raw --no-creds "docker://$dest" | sha256sum | cut -d' ' -f1) || got=unreadable
   if [ "$got" != "${digest#sha256:}" ]; then
-    echo "::error::$target: mirrored digest sha256:$got is not the pinned $digest"
+    echo "::error::$target: anonymous pull of $dest gives $got, not the pinned $digest (is the package public?)"
     failed=1
   fi
 done <"$list"
