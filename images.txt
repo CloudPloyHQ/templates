@@ -22,3 +22,7 @@ wordpress:cli-2.12.0-php8.4 public.ecr.aws/docker/library/wordpress:cli-2.12.0-p
 ghost:6.79.0 public.ecr.aws/docker/library/ghost:6.79.0@sha256:abfa44b1827e514bce3ef1f5e1471bb7c7fd885d9e6316cd648a8b8b883808f0
 n8n:2.49.6 docker.io/n8nio/n8n:2.49.6@sha256:a1a9955a4a9e5dd9fa65a62f59e0751351b45b9e5cd2c17e6e330a8d0026cad8
 uptime-kuma:2.5.12-slim docker.io/louislam/uptime-kuma:2.5.12-slim@sha256:f2a9bc853deb2a6f37df229649f96d62efc3cb24e38b08eee79234f76613d063
+
+# Nixpacks build image for Node, Python, Ruby and other non-PHP apps (Nixpacks 1.41.0 default,
+# src/nixpacks/images.rs UBUNTU_BASE_IMAGE). brain passes it with --json-plan buildImage.
+nixpacks:ubuntu-1745885067 ghcr.io/railwayapp/nixpacks:ubuntu-1745885067@sha256:d45c89d80e13d7ad0fd555b5130f22a866d9dd10e861f589932303ef2314c7de
