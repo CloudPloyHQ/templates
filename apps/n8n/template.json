@@ -1,0 +1,30 @@
+{
+  "id": "n8n",
+  "name": "n8n",
+  "description": "The official n8n image with a Postgres database, its files on a lasting volume and an HTTPS address. Signs in with the creator's email address and the password shown to the team's owners and admins in the console.",
+  "image": "{{registry}}/n8n:2.49.6@sha256:a1a9955a4a9e5dd9fa65a62f59e0751351b45b9e5cd2c17e6e330a8d0026cad8",
+  "port": 5678,
+  "volume": "/home/node/.n8n",
+  "database": "postgres",
+  "memory_mb": 512,
+  "env": {
+    "DB_TYPE": "postgresdb",
+    "DB_POSTGRESDB_HOST": "{{database.host}}",
+    "DB_POSTGRESDB_PORT": "{{database.port}}",
+    "DB_POSTGRESDB_USER": "{{database.user}}",
+    "DB_POSTGRESDB_PASSWORD": "{{database.password}}",
+    "DB_POSTGRESDB_DATABASE": "{{database.name}}",
+    "N8N_ENCRYPTION_KEY": "{{secret}}",
+    "N8N_EDITOR_BASE_URL": "{{app.url}}/",
+    "WEBHOOK_URL": "{{app.url}}/",
+    "N8N_PROXY_HOPS": "1"
+  },
+  "setup": {
+    "command": "node -e 'let p=\"\";process.stdin.on(\"data\",d=>p+=d).on(\"end\",async()=>{const b=\"http://127.0.0.1:5678\";let up=false;for(let i=0;i<120&&!up;i++){up=await fetch(b+\"/healthz/readiness\").then(r=>r.ok,()=>false);if(!up)await new Promise(r=>setTimeout(r,2000))}if(!up)process.exit(3);const r=await fetch(b+\"/rest/owner/setup\",{method:\"POST\",headers:{\"Content-Type\":\"application/json\"},body:JSON.stringify({email:process.env.CP_ADMIN_EMAIL,firstName:\"Instance\",lastName:\"Owner\",password:p.trim()})});const t=await r.text();process.exit(r.ok||t.includes(\"already setup\")?0:4)})' && touch /home/node/.n8n/.cloudploy-ready",
+    "ready": "/home/node/.n8n/.cloudploy-ready"
+  },
+  "admin": {
+    "user": "owner",
+    "path": "/signin"
+  }
+}

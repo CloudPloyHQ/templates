@@ -1,0 +1,28 @@
+{
+  "id": "ghost",
+  "name": "Ghost",
+  "description": "The official Ghost image with a MySQL database, its content on a lasting volume and an HTTPS address. Signs in at /ghost/ with the creator's email address and the password shown to the team's owners and admins in the console. Email sending (newsletters, staff invites, password reset) is not set up.",
+  "image": "{{registry}}/ghost:6.79.0@sha256:abfa44b1827e514bce3ef1f5e1471bb7c7fd885d9e6316cd648a8b8b883808f0",
+  "port": 2368,
+  "volume": "/var/lib/ghost/content",
+  "database": "mysql",
+  "memory_mb": 512,
+  "env": {
+    "url": "{{app.url}}",
+    "database__client": "mysql",
+    "database__connection__host": "{{database.host}}",
+    "database__connection__port": "{{database.port}}",
+    "database__connection__user": "{{database.user}}",
+    "database__connection__password": "{{database.password}}",
+    "database__connection__database": "{{database.name}}",
+    "security__staffDeviceVerification": "false"
+  },
+  "setup": {
+    "command": "node -e 'let p=\"\";process.stdin.on(\"data\",d=>p+=d).on(\"end\",async()=>{const u=\"http://127.0.0.1:2368/ghost/api/admin/authentication/setup/\",h={\"Content-Type\":\"application/json\",\"X-Forwarded-Proto\":\"https\"};let s;for(let i=0;i<120&&!s;i++){s=await fetch(u,{headers:h}).then(r=>r.ok?r.json():null,()=>null);if(!s)await new Promise(r=>setTimeout(r,2000))}if(!s)process.exit(3);if(s.setup[0].status)process.exit(0);const r=await fetch(u,{method:\"POST\",headers:h,body:JSON.stringify({setup:[{name:\"Owner\",email:process.env.CP_ADMIN_EMAIL,password:p.trim(),blogTitle:process.env.CP_APP_NAME}]})});process.exit(r.ok?0:4)})' && touch /var/lib/ghost/content/.cloudploy-ready",
+    "ready": "/var/lib/ghost/content/.cloudploy-ready"
+  },
+  "admin": {
+    "user": "owner",
+    "path": "/ghost/"
+  }
+}

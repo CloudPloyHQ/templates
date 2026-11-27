@@ -1,0 +1,32 @@
+{
+  "id": "wordpress",
+  "name": "WordPress",
+  "description": "The official WordPress image with a MySQL database, its files on a lasting volume and an HTTPS address. Signs in at /wp-admin with the admin user and the password shown to the team's owners and admins in the console.",
+  "image": "{{registry}}/wordpress:7.1.5-php8.4-apache@sha256:98a3fba3639b89fe1ade0cf6d37e61bc8934de872cf26d9dc5286962b554e3d1",
+  "port": 80,
+  "volume": "/var/www/html",
+  "database": "mysql",
+  "memory_mb": 512,
+  "env": {
+    "WORDPRESS_DB_HOST": "{{database.host}}:{{database.port}}",
+    "WORDPRESS_DB_USER": "{{database.user}}",
+    "WORDPRESS_DB_PASSWORD": "{{database.password}}",
+    "WORDPRESS_DB_NAME": "{{database.name}}",
+    "WORDPRESS_AUTH_KEY": "{{secret}}",
+    "WORDPRESS_SECURE_AUTH_KEY": "{{secret}}",
+    "WORDPRESS_LOGGED_IN_KEY": "{{secret}}",
+    "WORDPRESS_NONCE_KEY": "{{secret}}",
+    "WORDPRESS_AUTH_SALT": "{{secret}}",
+    "WORDPRESS_SECURE_AUTH_SALT": "{{secret}}",
+    "WORDPRESS_LOGGED_IN_SALT": "{{secret}}",
+    "WORDPRESS_NONCE_SALT": "{{secret}}",
+    "WORDPRESS_TABLE_PREFIX": "wp_",
+    "WORDPRESS_CONFIG_EXTRA": "define('WP_HOME', getenv('APP_URL')); define('WP_SITEURL', getenv('APP_URL')); if (PHP_SAPI !== 'cli' && preg_match('#/wp-admin/(install|setup-config)[.]php#', (string) filter_input(INPUT_SERVER, 'SCRIPT_FILENAME'))) { http_response_code(404); exit; }"
+  },
+  "setup": {
+    "image": "{{registry}}/wordpress:cli-2.12.0-php8.4@sha256:df224f633697444bbd1d2ca54b357b4f86834f82a74881b3e1acfbcc761025bb",
+    "user": "33:33",
+    "command": "p=$(cat); wp core is-installed 2>/dev/null && exit 0; wp core install --url=\"$APP_URL\" --title=\"$CP_APP_NAME\" --admin_user=admin --admin_email=\"$CP_ADMIN_EMAIL\" --admin_password=\"$p\" --skip-email"
+  },
+  "admin": { "user": "admin", "path": "/wp-admin/" }
+}
