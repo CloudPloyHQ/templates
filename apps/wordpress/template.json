@@ -26,7 +26,7 @@
   "setup": {
     "image": "{{registry}}/wordpress:cli-2.12.0-php8.4@sha256:df224f633697444bbd1d2ca54b357b4f86834f82a74881b3e1acfbcc761025bb",
     "user": "33:33",
-    "command": "p=$(cat); wp core is-installed 2>/dev/null && exit 0; wp core install --url=\"$APP_URL\" --title=\"$CP_APP_NAME\" --admin_user=admin --admin_email=\"$CP_ADMIN_EMAIL\" --admin_password=\"$p\" --skip-email"
+    "command": "wp core is-installed 2>/dev/null && exit 0; wp core install --url=\"$APP_URL\" --title=\"$CP_APP_NAME\" --admin_user=admin --admin_email=\"$CP_ADMIN_EMAIL\" --skip-email --prompt=admin_password >/dev/null"
   },
   "admin": { "user": "admin", "path": "/wp-admin/" }
 }
