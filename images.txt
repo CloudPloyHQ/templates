@@ -26,3 +26,10 @@ uptime-kuma:2.5.12-slim docker.io/louislam/uptime-kuma:2.5.12-slim@sha256:f2a9bc
 # Nixpacks build image for Node, Python, Ruby and other non-PHP apps (Nixpacks 1.41.0 default,
 # src/nixpacks/images.rs UBUNTU_BASE_IMAGE). brain passes it with --json-plan buildImage.
 nixpacks:ubuntu-1745885067 ghcr.io/railwayapp/nixpacks:ubuntu-1745885067@sha256:d45c89d80e13d7ad0fd555b5130f22a866d9dd10e861f589932303ef2314c7de
+
+# Railpack 0.44.0 (brain flag builder_railpack): the BuildKit frontend, and the builder and
+# runtime images its plans name (tags follow the mise version compiled into the release).
+# brain rewrites each plan to these. Bump all three with brain's RAILPACK_VERSION.
+railpack-frontend:v0.44.0 ghcr.io/railwayapp/railpack-frontend:v0.44.0@sha256:ca7b4f62a572e1910cf51dc181bd5b51111a07efe6604f80536e16a9923ffae2
+railpack-builder:mise-2026.11.12 ghcr.io/railwayapp/railpack-builder:mise-2026.11.12@sha256:5cc8f5e70752265a14743cd62bf2a06751241227575b77653f7cc455ee086a33
+railpack-runtime:mise-2026.11.12 ghcr.io/railwayapp/railpack-runtime:mise-2026.11.12@sha256:ebba6b09dc4ab069333b26696c8e78477d68f381b7806a594e4a37cc8937bf44
