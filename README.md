@@ -7,7 +7,7 @@ servers, in the open.
   generates for that stack and a `template.json` describing it (frameworks, how they are
   detected, default port, start command, placeholders).
 - **App templates**: `apps/<id>/template.json`, one folder per one-click app (WordPress,
-  Ghost, n8n, Uptime Kuma). An app from a template runs a pinned image with no build, an
+  Ghost, n8n, Uptime Kuma, Umami, Metabase, Directus, NocoDB, Grafana, Gitea, SearXNG). An app from a template runs a pinned image with no build, an
   optional database and lasting volume, and an optional one-time setup.
 - **Images**: `images.txt` pins every third-party image CloudPloy runs (the PHP base,
   Composer, Traefik, Postgres, MySQL, Valkey and the one-click app images). A daily workflow

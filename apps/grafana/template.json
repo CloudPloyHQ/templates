@@ -1,0 +1,24 @@
+{
+  "id": "grafana",
+  "name": "Grafana",
+  "description": "The official Grafana image with its SQLite data on a lasting volume and an HTTPS address. Signs in with the admin user and the password shown to the team's owners and admins in the console. It has no separate database, so CloudPloy database backups do not cover it.",
+  "image": "{{registry}}/grafana:13.0.14@sha256:5b9445edbd1a35e7a09a4c5688e03f2138d3f8a1b1b70619707d35dc4388a1bb",
+  "port": 3000,
+  "volume": "/var/lib/grafana",
+  "memory_mb": 384,
+  "env": {
+    "GF_SERVER_ROOT_URL": "{{app.url}}",
+    "GF_SECURITY_SECRET_KEY": "{{secret}}",
+    "GF_USERS_ALLOW_SIGN_UP": "false",
+    "GF_ANALYTICS_REPORTING_ENABLED": "false",
+    "GF_ANALYTICS_CHECK_FOR_UPDATES": "false"
+  },
+  "setup": {
+    "command": "p=$(cat); i=0; until curl -fs -o /dev/null http://127.0.0.1:3000/api/health; do i=$((i+1)); [ $i -lt 150 ] || exit 3; sleep 2; done; grafana cli --homepath /usr/share/grafana admin reset-admin-password \"$p\" >/dev/null || exit 4; touch /var/lib/grafana/.cloudploy-ready",
+    "ready": "/var/lib/grafana/.cloudploy-ready"
+  },
+  "admin": {
+    "user": "admin",
+    "path": "/login"
+  }
+}

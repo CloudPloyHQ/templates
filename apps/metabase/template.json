@@ -1,0 +1,31 @@
+{
+  "id": "metabase",
+  "name": "Metabase",
+  "description": "The official Metabase image with a Postgres database for its own settings and an HTTPS address. Signs in with the creator's email address and the password shown to the team's owners and admins in the console. It needs about 1.3 GB of memory for itself, so it fits a server with 4 GB or more.",
+  "image": "{{registry}}/metabase:v0.65.7.3@sha256:560f9eaa0438fa5b85060905b38afacf7460f890ee5d8821c286696c5cef7f27",
+  "port": 3000,
+  "volume": "/metabase-data",
+  "database": "postgres",
+  "memory_mb": 1280,
+  "env": {
+    "MB_DB_TYPE": "postgres",
+    "MB_DB_HOST": "{{database.host}}",
+    "MB_DB_PORT": "{{database.port}}",
+    "MB_DB_USER": "{{database.user}}",
+    "MB_DB_PASS": "{{database.password}}",
+    "MB_DB_DBNAME": "{{database.name}}",
+    "MB_SITE_URL": "{{app.url}}",
+    "MB_ENCRYPTION_SECRET_KEY": "{{secret}}",
+    "MB_ANON_TRACKING_ENABLED": "false",
+    "MB_CHECK_FOR_UPDATES": "false",
+    "JAVA_OPTS": "-Xmx768m"
+  },
+  "setup": {
+    "command": "p=$(cat); b=http://127.0.0.1:3000/api; i=0; until curl -fs -o /dev/null $b/health; do i=$((i+1)); [ $i -lt 300 ] || exit 3; sleep 2; done; t=$(curl -fsS $b/session/properties | sed -n 's/.*\"setup-token\":\"\\([^\"]*\\)\".*/\\1/p'); if [ -n \"$t\" ]; then printf '{\"token\":\"%s\",\"user\":{\"email\":\"%s\",\"password\":\"%s\",\"first_name\":\"Admin\",\"last_name\":\"Owner\",\"site_name\":\"%s\"},\"prefs\":{\"site_name\":\"%s\",\"allow_tracking\":false}}' \"$t\" \"$CP_ADMIN_EMAIL\" \"$p\" Metabase Metabase | curl -fsS -o /dev/null -H 'Content-Type: application/json' --data-binary @- $b/setup || exit 4; fi; printf '{\"username\":\"%s\",\"password\":\"%s\"}' \"$CP_ADMIN_EMAIL\" \"$p\" | curl -fsS -o /dev/null -H 'Content-Type: application/json' --data-binary @- $b/session || exit 5; touch /metabase-data/.cloudploy-ready",
+    "ready": "/metabase-data/.cloudploy-ready"
+  },
+  "admin": {
+    "user": "owner",
+    "path": "/auth/login"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "nocodb",
+  "name": "NocoDB",
+  "description": "The official NocoDB image with a Postgres database, its files on a lasting volume and an HTTPS address. Signs in with the creator's email address and the password shown to the team's owners and admins in the console. New users join by invitation only.",
+  "image": "{{registry}}/nocodb:2026.11.0@sha256:f843d5aa8daa3bf6556a2e5ef210658af1b3c2103fba59010fb000cbdb770759",
+  "port": 8080,
+  "volume": "/usr/app/data",
+  "database": "postgres",
+  "memory_mb": 1024,
+  "env": {
+    "NC_DB": "pg://{{database.host}}:{{database.port}}?u={{database.user}}&p={{database.password}}&d={{database.name}}",
+    "NC_AUTH_JWT_SECRET": "{{secret}}",
+    "NC_PUBLIC_URL": "{{app.url}}",
+    "NC_DISABLE_TELE": "true"
+  },
+  "setup": {
+    "command": "node -e 'let p=\"\";process.stdin.on(\"data\",d=>p+=d).on(\"end\",async()=>{p=p.trim();const b=\"http://127.0.0.1:8080/api/v1\";let up=false;for(let i=0;i<150&&!up;i++){up=await fetch(b+\"/health\").then(r=>r.ok,()=>false);if(!up)await new Promise(r=>setTimeout(r,2000))}if(!up)process.exit(3);const h={\"Content-Type\":\"application/json\"};const body=JSON.stringify({email:process.env.CP_ADMIN_EMAIL,password:p});let r=await fetch(b+\"/auth/user/signin\",{method:\"POST\",headers:h,body});if(!r.ok)r=await fetch(b+\"/auth/user/signup\",{method:\"POST\",headers:h,body});if(!r.ok)process.exit(4);const t=(await r.json()).token;r=await fetch(b+\"/app-settings\",{method:\"POST\",headers:{...h,\"xc-auth\":t},body:JSON.stringify({invite_only_signup:true})});process.exit(r.ok?0:5)})' && touch /usr/app/data/.cloudploy-ready",
+    "ready": "/usr/app/data/.cloudploy-ready"
+  },
+  "admin": {
+    "user": "owner",
+    "path": "/dashboard/#/signin"
+  }
+}
