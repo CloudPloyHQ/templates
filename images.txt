@@ -22,6 +22,13 @@ wordpress:cli-2.12.0-php8.4 public.ecr.aws/docker/library/wordpress:cli-2.12.0-p
 ghost:6.79.0 public.ecr.aws/docker/library/ghost:6.79.0@sha256:abfa44b1827e514bce3ef1f5e1471bb7c7fd885d9e6316cd648a8b8b883808f0
 n8n:2.49.6 docker.io/n8nio/n8n:2.49.6@sha256:a1a9955a4a9e5dd9fa65a62f59e0751351b45b9e5cd2c17e6e330a8d0026cad8
 uptime-kuma:2.5.12-slim docker.io/louislam/uptime-kuma:2.5.12-slim@sha256:f2a9bc853deb2a6f37df229649f96d62efc3cb24e38b08eee79234f76613d063
+umami:3.5.0 ghcr.io/umami-software/umami:3.5.0@sha256:b64f40400d77bcadd39cf5c62a1e368c99524ca442024f96e1133355a19a5dbc
+metabase:v0.65.7.3 docker.io/metabase/metabase:v0.65.7.3@sha256:560f9eaa0438fa5b85060905b38afacf7460f890ee5d8821c286696c5cef7f27
+directus:12.7.0 docker.io/directus/directus:12.7.0@sha256:f197911d949a37d882f781b0381955b851c86625435014cd67bdaf3eabcff2a7
+nocodb:2026.11.0 docker.io/nocodb/nocodb:2026.11.0@sha256:f843d5aa8daa3bf6556a2e5ef210658af1b3c2103fba59010fb000cbdb770759
+grafana:13.0.14 docker.io/grafana/grafana:13.0.14@sha256:5b9445edbd1a35e7a09a4c5688e03f2138d3f8a1b1b70619707d35dc4388a1bb
+gitea:28.4.0 docker.io/gitea/gitea:28.4.0@sha256:aa90e8f00b755b0d665214ab9c14447ea44d3190dbe6b6d0cb46cd9c4f55d309
+searxng:2026.11.26-b5605b8f2 docker.io/searxng/searxng:2026.11.26-b5605b8f2@sha256:462d8dbeadd7c7c304be08d47084f5caba70f47a9145a01fd25990a7944e61b7
 
 # Nixpacks build image for Node, Python, Ruby and other non-PHP apps (Nixpacks 1.41.0 default,
 # src/nixpacks/images.rs UBUNTU_BASE_IMAGE). brain passes it with --json-plan buildImage.

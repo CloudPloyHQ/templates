@@ -1,0 +1,30 @@
+{
+  "id": "gitea",
+  "name": "Gitea",
+  "description": "The official Gitea image with a Postgres database, its repositories on a lasting volume and an HTTPS address. Git works over HTTPS (no SSH). Signs in with the admin user and the password shown to the team's owners and admins in the console. Sign-up is off; the admin adds users.",
+  "image": "{{registry}}/gitea:28.4.0@sha256:aa90e8f00b755b0d665214ab9c14447ea44d3190dbe6b6d0cb46cd9c4f55d309",
+  "port": 3000,
+  "volume": "/data",
+  "database": "postgres",
+  "memory_mb": 256,
+  "env": {
+    "GITEA__database__DB_TYPE": "postgres",
+    "GITEA__database__HOST": "{{database.host}}:{{database.port}}",
+    "GITEA__database__NAME": "{{database.name}}",
+    "GITEA__database__USER": "{{database.user}}",
+    "GITEA__database__PASSWD": "{{database.password}}",
+    "GITEA__security__INSTALL_LOCK": "true",
+    "GITEA__security__SECRET_KEY": "{{secret}}",
+    "GITEA__server__ROOT_URL": "{{app.url}}/",
+    "GITEA__server__DISABLE_SSH": "true",
+    "GITEA__service__DISABLE_REGISTRATION": "true"
+  },
+  "setup": {
+    "user": "git",
+    "command": "p=$(cat); i=0; until curl -fs -o /dev/null http://127.0.0.1:3000/api/healthz; do i=$((i+1)); [ $i -lt 150 ] || exit 3; sleep 2; done; g=\"gitea --config /data/gitea/conf/app.ini admin user\"; $g change-password --username admin --password \"$p\" --must-change-password=false >/dev/null 2>&1 || $g create --admin --username admin --email \"$CP_ADMIN_EMAIL\" --password \"$p\" --must-change-password=false >/dev/null"
+  },
+  "admin": {
+    "user": "admin",
+    "path": "/user/login"
+  }
+}

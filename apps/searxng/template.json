@@ -1,0 +1,12 @@
+{
+  "id": "searxng",
+  "name": "SearXNG",
+  "description": "The official SearXNG metasearch image with an HTTPS address. It has no accounts and no data to keep: anyone with the address can search through it.",
+  "image": "{{registry}}/searxng:2026.11.26-b5605b8f2@sha256:462d8dbeadd7c7c304be08d47084f5caba70f47a9145a01fd25990a7944e61b7",
+  "port": 8080,
+  "memory_mb": 256,
+  "env": {
+    "SEARXNG_SECRET": "{{secret}}",
+    "SEARXNG_BASE_URL": "{{app.url}}/"
+  }
+}

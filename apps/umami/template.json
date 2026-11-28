@@ -1,0 +1,23 @@
+{
+  "id": "umami",
+  "name": "Umami",
+  "description": "The official Umami web analytics image with a Postgres database and an HTTPS address. Signs in with the admin user and the password shown to the team's owners and admins in the console.",
+  "image": "{{registry}}/umami:3.5.0@sha256:b64f40400d77bcadd39cf5c62a1e368c99524ca442024f96e1133355a19a5dbc",
+  "port": 3000,
+  "volume": "/app/data",
+  "database": "postgres",
+  "memory_mb": 384,
+  "env": {
+    "DATABASE_URL": "{{database.url}}",
+    "APP_SECRET": "{{secret}}"
+  },
+  "setup": {
+    "user": "root",
+    "command": "node -e 'let p=\"\";process.stdin.on(\"data\",d=>p+=d).on(\"end\",async()=>{p=p.trim();const b=\"http://127.0.0.1:3000/api\";let up=false;for(let i=0;i<150&&!up;i++){up=await fetch(b+\"/heartbeat\").then(r=>r.ok,()=>false);if(!up)await new Promise(r=>setTimeout(r,2000))}if(!up)process.exit(3);const login=w=>fetch(b+\"/auth/login\",{method:\"POST\",headers:{\"Content-Type\":\"application/json\"},body:JSON.stringify({username:\"admin\",password:w})}).then(async r=>r.ok?(await r.json()).token:null);const t=await login(\"umami\");if(t){const r=await fetch(b+\"/me/password\",{method:\"POST\",headers:{\"Content-Type\":\"application/json\",Authorization:\"Bearer \"+t},body:JSON.stringify({currentPassword:\"umami\",newPassword:p})});if(!r.ok)process.exit(4)}process.exit(await login(p)?0:5)})' && touch /app/data/.cloudploy-ready",
+    "ready": "/app/data/.cloudploy-ready"
+  },
+  "admin": {
+    "user": "admin",
+    "path": "/login"
+  }
+}

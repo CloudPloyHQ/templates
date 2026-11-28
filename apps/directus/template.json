@@ -1,0 +1,29 @@
+{
+  "id": "directus",
+  "name": "Directus",
+  "description": "The official Directus image with a Postgres database, its uploads on a lasting volume and an HTTPS address. Signs in with admin@example.com and the password shown to the team's owners and admins in the console; change the email in Directus after the first sign-in.",
+  "image": "{{registry}}/directus:12.7.0@sha256:f197911d949a37d882f781b0381955b851c86625435014cd67bdaf3eabcff2a7",
+  "port": 8055,
+  "volume": "/directus/uploads",
+  "database": "postgres",
+  "memory_mb": 512,
+  "env": {
+    "DB_CLIENT": "pg",
+    "DB_HOST": "{{database.host}}",
+    "DB_PORT": "{{database.port}}",
+    "DB_USER": "{{database.user}}",
+    "DB_PASSWORD": "{{database.password}}",
+    "DB_DATABASE": "{{database.name}}",
+    "SECRET": "{{secret}}",
+    "PUBLIC_URL": "{{app.url}}",
+    "TELEMETRY": "false"
+  },
+  "setup": {
+    "command": "p=$(cat); i=0; until wget -q -O /dev/null http://127.0.0.1:8055/server/ping 2>/dev/null; do i=$((i+1)); [ $i -lt 150 ] || exit 3; sleep 2; done; d=\"node /directus/cli.js\"; if ! $d users passwd --email admin@example.com --password \"$p\" >/dev/null 2>&1; then r=$($d roles create --role Administrator --admin --app 2>/dev/null | grep -Eo \"[0-9a-f-]{36}\" | tail -n1); [ -n \"$r\" ] || exit 4; $d users create --email admin@example.com --password \"$p\" --role \"$r\" >/dev/null 2>&1 || exit 5; fi; touch /directus/uploads/.cloudploy-ready",
+    "ready": "/directus/uploads/.cloudploy-ready"
+  },
+  "admin": {
+    "user": "admin@example.com",
+    "path": "/admin/login"
+  }
+}
