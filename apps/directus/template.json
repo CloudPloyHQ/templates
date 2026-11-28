@@ -19,7 +19,7 @@
     "TELEMETRY": "false"
   },
   "setup": {
-    "command": "p=$(cat); i=0; until wget -q -O /dev/null http://127.0.0.1:8055/server/ping 2>/dev/null; do i=$((i+1)); [ $i -lt 150 ] || exit 3; sleep 2; done; d=\"node /directus/cli.js\"; if ! $d users passwd --email admin@example.com --password \"$p\" >/dev/null 2>&1; then r=$($d roles create --role Administrator --admin --app 2>/dev/null | grep -Eo \"[0-9a-f-]{36}\" | tail -n1); [ -n \"$r\" ] || exit 4; $d users create --email admin@example.com --password \"$p\" --role \"$r\" >/dev/null 2>&1 || exit 5; fi; touch /directus/uploads/.cloudploy-ready",
+    "command": "p=$(cat); i=0; until wget -q -O /dev/null http://127.0.0.1:8055/server/ping 2>/dev/null; do i=$((i+1)); [ $i -lt 150 ] || exit 3; sleep 2; done; d=\"node /directus/cli.js\"; dp() { CP_PASSWORD=\"$p\" node -e 'process.argv=[process.argv[0],\"/directus/cli.js\",...process.argv.slice(1),\"--password\",process.env.CP_PASSWORD];delete process.env.CP_PASSWORD;import(\"/directus/cli.js\")' \"$@\"; }; if ! dp users passwd --email admin@example.com >/dev/null 2>&1; then r=$($d roles create --role Administrator --admin --app 2>/dev/null | grep -Eo \"[0-9a-f-]{36}\" | tail -n1); [ -n \"$r\" ] || exit 4; dp users create --email admin@example.com --role \"$r\" >/dev/null 2>&1 || exit 5; fi; touch /directus/uploads/.cloudploy-ready",
     "ready": "/directus/uploads/.cloudploy-ready"
   },
   "admin": {

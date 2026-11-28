@@ -21,7 +21,7 @@
   },
   "setup": {
     "user": "git",
-    "command": "p=$(cat); i=0; until curl -fs -o /dev/null http://127.0.0.1:3000/api/healthz; do i=$((i+1)); [ $i -lt 150 ] || exit 3; sleep 2; done; g=\"gitea --config /data/gitea/conf/app.ini admin user\"; $g change-password --username admin --password \"$p\" --must-change-password=false >/dev/null 2>&1 || $g create --admin --username admin --email \"$CP_ADMIN_EMAIL\" --password \"$p\" --must-change-password=false >/dev/null"
+    "command": "p=$(cat); i=0; until curl -fs -o /dev/null http://127.0.0.1:3000/api/healthz; do i=$((i+1)); [ $i -lt 150 ] || exit 3; sleep 2; done; g=\"gitea --config /data/gitea/conf/app.ini admin user\"; u=http://127.0.0.1:3000/api/v1; n=cloudploy-setup-$$; $g create --admin --username admin --email \"$CP_ADMIN_EMAIL\" --random-password --must-change-password=false >/dev/null 2>&1; t=$($g generate-access-token --username admin --token-name \"$n\" --scopes write:admin --raw 2>/dev/null); [ -n \"$t\" ] || exit 4; printf 'header = \"Authorization: token %s\"\\nheader = \"Content-Type: application/json\"\\ndata = \"{\\\\\"login_name\\\\\":\\\\\"admin\\\\\",\\\\\"source_id\\\\\":0,\\\\\"must_change_password\\\\\":false,\\\\\"password\\\\\":\\\\\"%s\\\\\"}\"\\n' \"$t\" \"$p\" | curl -fsS -o /dev/null -X PATCH -K - $u/admin/users/admin || exit 5; printf 'user = \"admin:%s\"\\n' \"$p\" | curl -fsS -o /dev/null -X DELETE -K - $u/users/admin/tokens/$n || exit 6"
   },
   "admin": {
     "user": "admin",

@@ -71,7 +71,7 @@ digest in the package, so servers pinned to it can still pull it.
    | `volume` | no | absolute path of one lasting volume; the app then runs one copy |
    | `database` | no | `postgres`, `mysql` or `redis`: made with the app, linked, deleted with it |
    | `env` | no | variables CloudPloy owns for the app |
-   | `setup` | no | `command` (sh, the admin secret on stdin), optional pinned `image` and `user`, optional `ready` file on the volume that the command creates last |
+   | `setup` | no | `command` (sh, the admin secret on stdin), optional pinned `image` and `user`, optional `ready` file on the volume that the command creates last. The secret never goes in a command's arguments, where `ps` shows it: hand it on stdin (`--password-from-stdin`, `--prompt`, `process.stdin`), as a `printf` argument piped on (curl `-K -` reads a config from stdin), or as an env assignment in front of one command. Brain's tests refuse anything else |
    | `admin` | no | `user` and `path` of the admin account; needs a `setup` |
 
    Env values may use `{{secret}}` (generated once, stored encrypted), `{{app.url}}` and

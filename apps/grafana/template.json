@@ -14,7 +14,7 @@
     "GF_ANALYTICS_CHECK_FOR_UPDATES": "false"
   },
   "setup": {
-    "command": "p=$(cat); i=0; until curl -fs -o /dev/null http://127.0.0.1:3000/api/health; do i=$((i+1)); [ $i -lt 150 ] || exit 3; sleep 2; done; grafana cli --homepath /usr/share/grafana admin reset-admin-password \"$p\" >/dev/null || exit 4; touch /var/lib/grafana/.cloudploy-ready",
+    "command": "i=0; until curl -fs -o /dev/null http://127.0.0.1:3000/api/health; do i=$((i+1)); [ $i -lt 150 ] || exit 3; sleep 2; done; grafana cli --homepath /usr/share/grafana admin reset-admin-password --password-from-stdin >/dev/null || exit 4; touch /var/lib/grafana/.cloudploy-ready",
     "ready": "/var/lib/grafana/.cloudploy-ready"
   },
   "admin": {
