@@ -4,7 +4,8 @@
   "frameworks": {
     "laravel": {
       "detect": "file artisan and composer.json require laravel/framework",
-      "doc_root": "/app/public"
+      "doc_root": "/app/public",
+      "database": "postgres"
     },
     "symfony": {
       "detect": "file bin/console and composer.json require symfony/framework-bundle or symfony/symfony",

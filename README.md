@@ -42,6 +42,10 @@ the recipe folders and `apps/` at one commit (`src/recipes/` in brain, with the 
 from this repo at that commit. A change here reaches customers only when brain is moved to
 the new commit and released.
 
+A framework with `"database": "postgres"` (Laravel) needs a database to run its first deploy
+(`php artisan migrate`). When CloudPloy detects it, the new-app form offers to create that
+database on the same server and link it, and the first deploy waits for it.
+
 Placeholders such as `{PHP_IMAGE}` are filled by brain with images from
 `ghcr.io/cloudployhq`, pinned by digest.
 
